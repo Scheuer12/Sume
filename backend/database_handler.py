@@ -1,6 +1,7 @@
 import pyodbc
+from typing import Union, Tuple
 
-class connection:
+class database_handler:
 
     def __init__(self):
         self.cursor = None
@@ -25,7 +26,7 @@ class connection:
         )
         
         self.connection = pyodbc.connect(self.connection_data)
-        self.cursor = connection.cursor()
+        self.cursor = self.connection.cursor()
 
 
 
@@ -68,7 +69,7 @@ class connection:
                 if table in self.valid_tabs and all(item in self.valid_cols for item in columns):
 
                     cols = ", ".join(columns)
-                    placeholders = ", ".join(["%s"] * len(columns))
+                    placeholders = ", ".join(["%s"] * len(data))
                     query = (f"""
                     INSERT INTO {table} ({cols}) 
                     VALUES ({placeholders})
@@ -76,9 +77,44 @@ class connection:
 
                     self.cursor.execute(query, data)
                     self.connection.commit()
+                    print("Dados adicionados com sucesso.")
 
                 else:
                     print("Os dados de estrutura fornecidos são inválidos. Verifique os nomes de tabelas e colunas.")
                     return
             except Exception as e:
                 print(f"Erro: {e}")
+
+
+
+
+    def read(self, table, columns: Union[str, Tuple[str, ...]], filter_column: str, filter_formula: str):
+        self.get_valid_tables()
+        self.get_valid_columns(self, table)
+        if table in self.valid_tabs and (
+            columns == "*" or all(item in self.valid_cols for item in columns)
+            ):
+            try:
+                if columns == "*":
+                    cols = "*"
+                else:
+                    cols = ", ".join(columns)
+                
+                if filter_column in self.valid_cols:
+                    condition = f" WHERE {filter_column} %s"
+                    query = f"SELECT {cols} FROM {table} {condition}"
+                    self.cursor.execute(query, (filter_formula,))
+                else:
+                    query = f"SELECT {cols} FROM {table}"
+                    self.cursor.execute(query)
+
+                read_data = self.cursos.fetchall()
+                return(read_data)
+
+            except Exception as e:
+                print(f"Erro: {e}")
+                return
+
+        else:
+            print("Os dados de estrutura fornecidos são inválidos. Verifique os nomes de tabelas e colunas.")
+            return
