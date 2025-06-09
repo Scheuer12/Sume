@@ -14,12 +14,12 @@ class database_handler:
 
     def connect(self):
 
-        self.database = "FinanceControl"
+        self.database = "financecontrol"
 
         self.connection_data = (
-            f"DRIVER=MySQL ODBC 9.3 ANSI Driver;"
+            "DRIVER=MySQL ODBC 9.3 ANSI Driver;"
             "SERVER=localhost;"
-            "DATABASE={self.database};"
+            f"DATABASE={self.database};"
             "UID=root;"
             "PWD=;"
             "OPTION=3;"
@@ -49,9 +49,9 @@ class database_handler:
         query = """
             SELECT table_name
             FROM information_schema.tables
-            WHERE table_schema = %s
+            WHERE table_schema = ?
         """
-        self.cursor.execute(query, (self.database,))
+        self.cursor.execute(query, self.database)
         result = self.cursor.fetchall()
         self.valid_tabs = [line[0] for line in result]
     
@@ -69,9 +69,9 @@ class database_handler:
                 if table in self.valid_tabs and all(item in self.valid_cols for item in columns):
 
                     cols = ", ".join(columns)
-                    placeholders = ", ".join(["%s"] * len(data))
+                    placeholders = ", ".join(["?"] * len(data))
                     query = (f"""
-                    INSERT INTO {table} ({cols}) 
+                    INSERT INTO {table} ({cols})
                     VALUES ({placeholders})
                     """)
 
@@ -88,9 +88,9 @@ class database_handler:
 
 
 
-    def read(self, table, columns: Union[str, Tuple[str, ...]], filter_column: str, filter_formula: str):
+    def read(self, table, columns: Union[str, Tuple[str, ...]], filter_column = None, filter_formula = None):
         self.get_valid_tables()
-        self.get_valid_columns(self, table)
+        self.get_valid_columns(table)
         if table in self.valid_tabs and (
             columns == "*" or all(item in self.valid_cols for item in columns)
             ):
@@ -101,14 +101,14 @@ class database_handler:
                     cols = ", ".join(columns)
                 
                 if filter_column in self.valid_cols:
-                    condition = f" WHERE {filter_column} %s"
+                    condition = f" WHERE {filter_column} ?"
                     query = f"SELECT {cols} FROM {table} {condition}"
                     self.cursor.execute(query, (filter_formula,))
                 else:
                     query = f"SELECT {cols} FROM {table}"
                     self.cursor.execute(query)
 
-                read_data = self.cursos.fetchall()
+                read_data = self.cursor.fetchall()
                 return(read_data)
 
             except Exception as e:

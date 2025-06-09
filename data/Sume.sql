@@ -23,7 +23,7 @@ USE `FinanceControl` ;
 CREATE TABLE IF NOT EXISTS `FinanceControl`.`Suppliers` (
   `idSuppliers` INT NOT NULL AUTO_INCREMENT,
   `supplierName` MEDIUMTEXT NOT NULL,
-  `supplierCNPJ` SMALLINT(45) NOT NULL,
+  `supplierCNPJ` VARCHAR(255) NOT NULL,
   `supplierActive` TINYINT NULL,
   `supplierStatus` ENUM('OK', 'Dívida', 'Aberto') NULL,
   `supplierBirth` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,10 +39,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `FinanceControl`.`Products` (
   `ProductId` INT NOT NULL AUTO_INCREMENT,
-  `ProductName` VARCHAR(45) NOT NULL,
-  `ProductSalePrice` DECIMAL(45) NULL,
+  `ProductName` VARCHAR(255) NOT NULL,
+  `ProductSalePrice` INT NULL,
   `productInternalId` VARCHAR(45) NULL,
-  `productCost` DECIMAL(45) NULL,
+  `productCost` INT NULL,
   `Productscol` VARCHAR(45) NULL,
   UNIQUE INDEX `ProductId_UNIQUE` (`ProductId` ASC) VISIBLE,
   PRIMARY KEY (`ProductId`))
@@ -54,12 +54,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `FinanceControl`.`Supplies` (
   `supplyID` INT NOT NULL AUTO_INCREMENT,
-  `supplyName` VARCHAR(45) NULL,
-  `supplyMeasure` VARCHAR(45) NULL,
-  `availableAmount` DECIMAL(45) NULL,
-  `monthlyAmount` DECIMAL(45) NULL,
-  `pricebyUnit` DECIMAL(45) NULL,
-  `amountbyUnit` DECIMAL(45) NULL,
+  `supplyName` VARCHAR(255) NULL,
+  `supplyMeasure` VARCHAR(255) NULL,
+  `availableAmount` INT NULL,
+  `monthlyAmount` INT NULL,
+  `pricebyUnit` INT NULL,
+  `amountbyUnit` INT NULL,
   PRIMARY KEY (`supplyID`))
 ENGINE = InnoDB;
 
@@ -80,7 +80,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `FinanceControl`.`suppliesByProduct` (
   `productFK` INT NOT NULL,
-  `qty` VARCHAR(45) NULL,
+  `qty` INT NULL,
   `supplyFK` INT NULL,
   INDEX `fk_suppliesByProduct_Supplies_idx` (`supplyFK` ASC) VISIBLE,
   INDEX `fk_suppliesByProduct_Products1_idx` (`productFK` ASC) VISIBLE,
