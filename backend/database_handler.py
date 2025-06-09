@@ -88,7 +88,7 @@ class database_handler:
 
 
 
-    def read(self, table, columns: Union[str, Tuple[str, ...]], filter_column = None, filter_formula = None):
+    def read(self, table, columns: Union[str, Tuple[str, ...]], expression = None):
         self.get_valid_tables()
         self.get_valid_columns(table)
         if table in self.valid_tabs and (
@@ -100,10 +100,9 @@ class database_handler:
                 else:
                     cols = ", ".join(columns)
                 
-                if filter_column in self.valid_cols:
-                    condition = f" WHERE {filter_column} ?"
-                    query = f"SELECT {cols} FROM {table} {condition}"
-                    self.cursor.execute(query, (filter_formula,))
+                if expression:
+                    query = f"SELECT {cols} FROM {table} {expression}"
+                    self.cursor.execute(query)
                 else:
                     query = f"SELECT {cols} FROM {table}"
                     self.cursor.execute(query)
@@ -118,3 +117,44 @@ class database_handler:
         else:
             print("Os dados de estrutura fornecidos são inválidos. Verifique os nomes de tabelas e colunas.")
             return
+        
+    
+
+
+    def update(self, table, columns=[], values=[], expression=None):
+
+        edit_query_list = []
+        
+        for i, col in enumerate(columns):
+            edit_query_list.append(f"{col} = ?")
+
+        edit_query = ", ".join(edit_query_list)
+        query = f"UPDATE {table} SET {edit_query}"
+
+        if expression:
+            query += f" WHERE {expression}"
+
+        try:
+            self.cursor.execute(query, values)
+            self.connection.commit()
+            print("UPDATE executado com sucesso.")
+        except Exception as e:
+            print(f"[ERRO] Falha ao executar UPDATE: {e}")
+
+
+
+
+    def delete(self, table, expression=None):
+        try:
+            if expression:
+                query = f"DELETE FROM {table} WHERE {expression}"
+            else:
+                print("[AVISO] DELETE sem cláusula WHERE não é permitido por segurança.")
+                return
+
+            self.cursor.execute(query)
+            self.connection.commit()
+            print("DELETE executado com sucesso.")
+            
+        except Exception as e:
+            print(f"[ERRO] Falha ao executar DELETE: {e}")
