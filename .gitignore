@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Security ignores
+*.env
+
 # C extensions
 *.so
 

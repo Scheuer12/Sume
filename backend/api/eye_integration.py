@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 class eyeapi:
 
-
     
     def __init__(self):
 
@@ -58,3 +57,6 @@ class eyeapi:
         else:
 
             print("Falha na importação. Tente novamente.")
+
+
+
