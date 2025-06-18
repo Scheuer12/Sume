@@ -9,27 +9,41 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">
-            <img src="../../img/sume.png" alt="Sume Logo" width="300px">
+    <nav class="main-navbar">
+        <div class="navbar-logo">
+            <img src="../../img/sume.png" alt="Sume Logo" width="48" height="48">
         </div>
-    </div>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="manual_sale.html">Manual Sale</a></li>
+            <li><a href="manual_expense.html">Manual Expense</a></li>
+            <li><a href="supply_stock.html">Supply Stock</a></li>
+        </ul>
+    </nav>
+    <div class="header" style="display:none;"></div>
     <div class="dashboard-container">
         <h1>Finance & Sales Dashboard</h1>
+        <form id="dashboard-filter-form" class="dashboard-filter-form">
+            <label for="filter-from">From:</label>
+            <input type="date" id="filter-from" name="from">
+            <label for="filter-to">To:</label>
+            <input type="date" id="filter-to" name="to">
+            <button type="submit">Apply Filter</button>
+        </form>
         <div class="dashboard-cards">
-            <div class="card" id="total-sales">
+            <div class="card" id="total-sales" data-link="manual_sale.html">
                 <h2>Total Sales</h2>
                 <p class="value">-</p>
             </div>
-            <div class="card" id="total-revenue">
+            <div class="card" id="total-revenue" data-link="manual_sale.html">
                 <h2>Total Revenue</h2>
                 <p class="value">-</p>
             </div>
-            <div class="card" id="current-cash">
+            <div class="card" id="current-cash" data-link="manual_expense.html">
                 <h2>Current Cash</h2>
                 <p class="value">-</p>
             </div>
-            <div class="card" id="projected-profit">
+            <div class="card" id="projected-profit" data-link="supply_stock.html">
                 <h2>Projected Profit</h2>
                 <p class="value">-</p>
             </div>

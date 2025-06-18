@@ -62,8 +62,9 @@ class sales_analytics:
             sales = [[prod, amt] for prod, amt in sold_products.items()]
             sales_list.append({
                 "date": date,
-                "sales": sales
-            })
+                "sales": sales,
+                "processed": False
+                })
 
         return {
             "success": True,

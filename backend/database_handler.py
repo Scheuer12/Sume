@@ -144,6 +144,22 @@ class database_handler:
 
 
 
+    def update_generic(self, table, set_dict, where_dict):
+        """
+        Update rows in a table.
+        set_dict: dict of columns to update {col: value}
+        where_dict: dict of WHERE clause {col: value}
+        """
+        set_clause = ', '.join([f"{col} = ?" for col in set_dict.keys()])
+        where_clause = ' AND '.join([f"{col} = ?" for col in where_dict.keys()])
+        values = list(set_dict.values()) + list(where_dict.values())
+        query = f"UPDATE {table} SET {set_clause} WHERE {where_clause}"
+        self.cursor.execute(query, values)
+        self.connection.commit()
+
+
+
+
     def delete(self, table, expression=None):
         try:
             if expression:
