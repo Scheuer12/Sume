@@ -1,105 +1,73 @@
-# Shaman
+# Sume
 
-# 🧾 Finance & Supply Management System
+Finance and inventory management for small businesses. An early prototype built around a practical question: **what do today's sales mean for cash flow and tomorrow's stock?**
 
-This project is a full-stack, real-world-oriented and actual-demand-originated system for **finance and inventory management**, built with clean database modeling and scalable architecture. It's designed for small businesses (especially in food/production sectors) that need to track sales, supplies (ingredients), and associated costs efficiently with 1 - 5 workers on the compaany only.
+I started this project for a small-business use case, with a focus on products, recipes, supplies, and daily sales. It also gave me a place to work on relational modeling and the connection between a Python backend and a JavaScript interface.
 
-> Important Note: As this project was designed both as a usable tool and a technical showcase or fullstach skills, python API readiness aand relational modeling, I chose to build it using JavaScript instead of Streamlit or Jinja, even though this first release is simple enough to be built in such a simpler way.
+**Status:** development prototype. The repository contains database models, backend modules, API routes, and interface pages. Several parts still need to be connected and validated before the application can run end to end.
 
----
+## The problem
 
-## 🎯 Purpose
+For a small food business, selling a product also consumes ingredients. Looking only at revenue misses part of the picture: which supplies were used, what remains in stock, and what needs to be purchased next.
 
-- Track products and their associated supplies (recipes).
-- Automatically update stock levels of products and raw materials after each sales day.
-- Store daily sales data (initially from OCR of printed receipts).
-- Provide cash flow simple management and a good level of data on dashboards for financial management.
-- Showcase full understanding of SQL-based architecture and backend development practices.
+Sume brings those pieces into one model:
 
----
+- Products and the supplies required to make them.
+- Daily sales and their effect on inventory.
+- Supply usage and purchasing suggestions.
+- Expenses and a financial dashboard.
 
-## 🧠 Tech Stack & Concepts
+## What's in the repository
 
-| Layer        | Technology / Concept      | Description                                         |
-|--------------|---------------------------|-----------------------------------------------------|
-| 💾 Database   | MySQL + MySQL Workbench   | Visual and relational modeling with foreign keys    |
-| 🧱 Modeling   | Normalized schema         | Use of junction tables for many-to-many and one-to-many relations   |
-| 🔐 Integrity  | Foreign Keys              | Enforced referential integrity at the DB level      |
-| 📊 Reporting  | SQL JOIN-ready structure  | Prepared for dashboards and aggregations            |
-| 🧠 Backend    | (Planned) FastAPI + SQLAlchemy | Future API and ORM support                         |
-| 🧾 OCR Layer  | (Planned) pytest + Cypress + GitHub Actions | Automatic testings for each commit and pull request after the software is ready   |
+| Area | Implementation | Current state |
+|---|---|---|
+| Database | MySQL, SQL exports, and a Workbench model | Products, supplies, suppliers, sales, and recipe relationships |
+| Backend | Python, FastAPI, and pyodbc | API routes and modules for sales, supplies, and balances; integration is incomplete |
+| Interface | JavaScript, HTML, and CSS | Dashboard, manual sales, expenses, and stock pages |
+| Receipt import | OCR experiments | Early work; not a complete import pipeline |
 
----
+Start with the [database notes](docs/DB_SCHEMA.md), [API entry point](backend/main.py), and [supply calculations](backend/supplymanager.py). The [frontend API service](src/services/api.js) shows how the pages are intended to communicate with the backend.
 
-## 🧱 Database Overview
+## Design choices
 
-The database is built with normalized relationships and structured for extensibility. It includes:
+**Recipes as relationships.** A product can use several supplies, and the same supply can belong to several products. The `suppliesbyproduct` table connects them and stores the quantity needed for each recipe entry.
 
-- Products
-- Supplies
-- Product recipes (junction table)
-- Daily Sales
-- Financial transactions
+**Separate backend and interface.** I chose a JavaScript interface to work on API integration alongside the Python logic. A server-rendered interface would have been a smaller starting point, but building the connection was part of the project.
 
-> 📘 For a complete breakdown of tables, fields, and relationships, see  
-> [`docs/DB_SCHEMA.md`](docs/DB_SCHEMA.md)
+**Sales as an input to stock planning.** The supply module uses recorded sales and recipe quantities to estimate consumption and purchasing needs. These calculations still need integration tests before they can be relied on.
 
----
+## Exploring the code
 
-## 🚀 Roadmap
+| Path | Contents |
+|---|---|
+| `backend/` | API entry point, database access, and business logic |
+| `src/html/` | Interface pages |
+| `src/pages/` | Page behavior |
+| `src/services/` | HTTP calls to the backend |
+| `src/styles/` | Interface styling |
+| `data/` | SQL exports and the Workbench model |
 
-- [x] Core entity modeling (products, supplies, recipes)
-- [ ] Stock deduction and simple metrics calculation background
-- [ ] OCR pipeline for importing sales data
-- [ ] Sales and transaction models
-- [ ] Backend individual autotesters
-- [ ] Financial dashboard (sales, costs, margins)
-- [ ] Frontend UI
-- [ ] End-to-end auto testers
-- [ ] GitHub Actions for test runs on every next pull request on main branch
+The code currently expects a local MySQL database accessed through an ODBC driver. The connection settings are in `backend/database_handler.py`; the frontend API URL is in `src/services/api.js`.
 
----
+There is no verified one-command setup yet. The product manager module is empty while the API imports functions from it, and some routes reference methods that are not implemented in the corresponding modules. Importing a database alone will not make this snapshot runnable.
 
-## 📂 Planned Code Structure
+The two SQL files also differ. See [schema versions and gaps](docs/DB_SCHEMA.md#schema-versions-and-gaps) before using either as a starting point.
 
-/backend
-└── app/
-├── models/
-├── routers/
-├── schemas/
-└── main.py
-/frontend
-└── src/
-├── components/
-├── pages/
-├── services/
-└── App.jsx
-/data
-└── DB_SCHEMA.md
+## Next steps
 
----
+- [ ] Complete the product module and align API routes with the backend methods.
+- [ ] Reconcile the database exports and document the setup with sample data.
+- [ ] Move connection settings into environment configuration and validate API inputs.
+- [ ] Test sales recording, recipe-based stock deduction, and supply calculations.
+- [ ] Connect and verify the interface flows.
+- [ ] Add automated checks once the first complete flow is working.
 
-## 🧪 How to Use
+## Author
 
-1. Clone this repository.
-2. Open the `.mwb` file in MySQL Workbench (or use the provided SQL script).
-3. Forward engineer to your local MySQL server.
-4. (Planned) Run .exe to access the interface.
+Carlos Scheuer — developer, process and project management professional, and founder of Epyatis.
 
-[Installer Assistant planned for a soon future]
+[LinkedIn](https://www.linkedin.com/in/carlosscheuer/)
 
----
+## License
 
-## 📜 License
-
-This project is public and open for educational or professional use.  
-Feel free to contribute, fork, or adapt with attribution.
-
----
-
-## 👤 Author
-
-**Carlos Scheuer**  
-Dev by heart, senior process maanaager and founder of [Epyatis](https://www.linkedin.com/in/carlosscheuer/) — dedicated to improving organizational performance and creating technology that delivers real business results.
-
-
+[MIT](LICENSE).
