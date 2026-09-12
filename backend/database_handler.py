@@ -63,7 +63,7 @@ class database_handler:
             print("Please check data x column count and try again.")
         else:
             self.get_valid_tables()
-            self.get_valid_columns(self, table)
+            self.get_valid_columns(table)
 
             try:           
                 if table in self.valid_tabs and all(item in self.valid_cols for item in columns):

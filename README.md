@@ -53,6 +53,16 @@ There is no verified one-command setup yet. The product manager module is empty 
 
 The two SQL files also differ. See [schema versions and gaps](docs/DB_SCHEMA.md#schema-versions-and-gaps) before using either as a starting point.
 
+## Verification
+
+The current automated check covers the database insert path with test doubles, so it does not require a local MySQL instance or ODBC driver:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+This is a focused regression test, not an end-to-end application test.
+
 ## Next steps
 
 - [ ] Complete the product module and align API routes with the backend methods.
@@ -60,7 +70,7 @@ The two SQL files also differ. See [schema versions and gaps](docs/DB_SCHEMA.md#
 - [ ] Move connection settings into environment configuration and validate API inputs.
 - [ ] Test sales recording, recipe-based stock deduction, and supply calculations.
 - [ ] Connect and verify the interface flows.
-- [ ] Add automated checks once the first complete flow is working.
+- [ ] Expand automated checks when the first complete flow is working.
 
 ## Author
 
